@@ -19,11 +19,14 @@ class test_basemodel(unittest.TestCase):
 
     def setUp(self):
         """ """
-        pass
+        try:
+            os.rename('file.json', 'temp')
+        except:
+            pass
 
     def tearDown(self):
         try:
-            os.remove('file.json')
+            os.rename('temp', 'file.json')
         except:
             pass
 
@@ -96,4 +99,6 @@ class test_basemodel(unittest.TestCase):
         self.assertEqual(type(new.updated_at), datetime.datetime)
         n = new.to_dict()
         new = BaseModel(**n)
+        new.name = 'BaseModel'
+        new.save()
         self.assertFalse(new.created_at == new.updated_at)
