@@ -33,7 +33,7 @@ class HBNBCommand(cmd.Cmd):
     def preloop(self):
         """Prints if isatty is false"""
         if not sys.__stdin__.isatty():
-            print('(hbnb)')
+            print('(hbnb) ', end="")
 
     def precmd(self, line):
         """Reformat command line for advanced command syntax.
@@ -126,33 +126,33 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist")
             return
 
-        if len(args_list) == 1:
-          new = HBNBCommand.classes[args]()
-          storage.save()
-          print(new.id)
-        else:
-            """Extract parameters from the command"""
-            params = args_list[1:]
-            params_dict = {}
-            for param in params:
-                key, value = param.split('=')
+        """Extract parameters from the command"""
+        params = args_list[1:]
+        params_dict = {}
+        for param in params:
+            key, value = param.split('=')
 
-                """Replace underscores with spaces in string values"""
-                if '"' in value:
-                    value = value.replace('_', ' ').replace('\\"', '"')
+            """Replace underscores with spaces in string values"""
+            if value.startswith('"') and type(value) == str:
+                value = value.strip('"')
 
-                    params_dict[key] = eval(value)
+                value = value.replace('_', ' ').replace('\\"', '"')
+            elif type(value) not in (str, float, int):
+                pass
+            else:
+                value = eval(value)
+            params_dict[key] = value
 
-                try:
-                    """Create an instance of the class with the given parameters"""
-                    new_instance = HBNBCommand.classes[class_name](**params_dict)
+        try:
+            """Create an instance of the class with the given parameters"""
+            new = HBNBCommand.classes[class_name](**params_dict)
 
-                    """Save the new instance to the storage"""
-
-                    storage.save()
-                    print(new_instance.id)
-                except Exception as e:
-                    print(f"Error creating instance: {e}")
+            """Save the new instance to the storage"""
+            storage.new(new)
+            storage.save()
+            print(new.id)
+        except Exception as e:
+            print(f"Error creating instance: {e}")
 
     def help_create(self):
         """ Help information for the create method """

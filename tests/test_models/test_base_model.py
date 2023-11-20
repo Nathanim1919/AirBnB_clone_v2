@@ -21,13 +21,13 @@ class test_basemodel(unittest.TestCase):
         """ """
         try:
             os.rename('file.json', 'temp')
-        except:
+        except Exception:
             pass
 
     def tearDown(self):
         try:
             os.rename('temp', 'file.json')
-        except:
+        except Exception:
             pass
 
     def test_default(self):
