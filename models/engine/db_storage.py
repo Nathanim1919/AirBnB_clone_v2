@@ -5,8 +5,7 @@ Description: A definition of mysql database for the models
 """
 import os
 from sqlalchemy import create_engine
-from sqlalchemy import scoped_session
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import (sessionmaker, scoped_session)
 from models.base_model import Base
 
 
@@ -27,14 +26,12 @@ class DBStorage:
         HBNB_MYSQL_HOST = 'localhost'
         HBNB_MYSQL_DB = os.getenv('HBNB_MYSQL_DB')
 
-        HBNB_ENV = os.getenv('HBNB_ENV')
-
         url = 'mysql+mysqldb://{}:{}@localhost/{}'.format(
             HBNB_MYSQL_USER, HBNB_MYSQL_PWD, HBNB_MYSQL_DB)
         self.__engine = create_engine(url, pool_pre_ping=True)
 
-        if HBNB_ENV == 'test':
-            Base.metadata.drop_all(engine)
+        if os.getenv('HBNB_ENV') == 'test':
+            Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
         """
@@ -42,10 +39,10 @@ class DBStorage:
         if not none, otherwise map all objects
         """
         obj_dict = {}
-        session_objects = DBStorage.__session.identity_map.values()
+        session_objects = self.__session.identity_map.values()
         if cls:
             for obj in session_objects:
-                if type(obj).__name__ == cls:
+                if type(obj).__name__ == eval(cls):
                     key = "cls.{}".format(obj.id)
                     obj_dict[key] = obj
         else:
@@ -58,18 +55,18 @@ class DBStorage:
     def new(self, obj):
         """Add an object to the current database session
         """
-        DBStorage.__session.add(obj)
+        self.__session.add(obj)
 
     def save(self):
         """Commit all changes of the current database session
         """
-        DBStorage.__session.commit()
+        self.__session.commit()
 
     def delete(self, obj=None):
         """Delete the given `obj` from the current database session
         """
         if obj:
-            DBStorage.__session.query(obj).delete()
+            self.__session.query(obj).delete()
 
     def reload(self):
         """Create all tables in the database
@@ -83,10 +80,10 @@ class DBStorage:
         from models.review import Review
 
         # Create all tables
-        Base.metadata.create_all(DBStorage.__engine)
+        Base.metadata.create_all(self.__engine)
 
         # Create current database session
-        session_factory = sessionmaker(bind=DBStorage.__engine,
+        session_factory = sessionmaker(bind=self.__engine,
                                        expire_on_commit=False)
         Session = scoped_session(session_factory)
-        DBStorage.__session = Session()
+        self.__session = Session()
