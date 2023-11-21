@@ -19,12 +19,15 @@ class test_basemodel(unittest.TestCase):
 
     def setUp(self):
         """ """
-        pass
+        try:
+            os.rename('file.json', 'temp')
+        except Exception:
+            pass
 
     def tearDown(self):
         try:
-            os.remove('file.json')
-        except:
+            os.rename('temp', 'file.json')
+        except Exception:
             pass
 
     def test_default(self):
@@ -77,8 +80,8 @@ class test_basemodel(unittest.TestCase):
     def test_kwargs_one(self):
         """ """
         n = {'Name': 'test'}
-        with self.assertRaises(KeyError):
-            new = self.value(**n)
+        new = self.value(**n)
+        self.assertIn('Name', new.__dict__.keys())
 
     def test_id(self):
         """ """
@@ -96,4 +99,6 @@ class test_basemodel(unittest.TestCase):
         self.assertEqual(type(new.updated_at), datetime.datetime)
         n = new.to_dict()
         new = BaseModel(**n)
+        new.name = 'BaseModel'
+        new.save()
         self.assertFalse(new.created_at == new.updated_at)

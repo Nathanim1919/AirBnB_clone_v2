@@ -33,7 +33,7 @@ class HBNBCommand(cmd.Cmd):
     def preloop(self):
         """Prints if isatty is false"""
         if not sys.__stdin__.isatty():
-            print('(hbnb)')
+            print('(hbnb) ', end="")
 
     def precmd(self, line):
         """Reformat command line for advanced command syntax.
@@ -118,13 +118,41 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
-            print("** class doesn't exist **")
+
+        args_list = args.split()
+
+        class_name = args_list[0]
+        if class_name not in HBNBCommand.classes:
+            print("** class doesn't exist")
             return
-        new_instance = HBNBCommand.classes[args]()
-        storage.save()
-        print(new_instance.id)
-        storage.save()
+
+        """Extract parameters from the command"""
+        params = args_list[1:]
+        params_dict = {}
+        for param in params:
+            key, value = param.split('=')
+
+            """Replace underscores with spaces in string values"""
+            if value.startswith('"') and type(value) == str:
+                value = value.strip('"')
+
+                value = value.replace('_', ' ').replace('\\"', '"')
+            elif type(value) not in (str, float, int):
+                pass
+            else:
+                value = eval(value)
+            params_dict[key] = value
+
+        try:
+            """Create an instance of the class with the given parameters"""
+            new = HBNBCommand.classes[class_name](**params_dict)
+
+            """Save the new instance to the storage"""
+            storage.new(new)
+            storage.save()
+            print(new.id)
+        except Exception as e:
+            print(f"Error creating instance: {e}")
 
     def help_create(self):
         """ Help information for the create method """
