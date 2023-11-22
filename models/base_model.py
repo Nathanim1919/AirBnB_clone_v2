@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-"""This module defines a base class for all models in our hbnb clone"""
 import uuid
 from datetime import datetime
 import models
@@ -10,7 +9,14 @@ Base = declarative_base()
 
 
 class BaseModel:
-    """A base class for all hbnb models"""
+    """A base class definition for all hbnb models
+
+    Attributes:
+        id (str): A unique id for each instance created
+        created_at (datetime): The date of creation of an instance
+        updated_at (datetime): The date when an instance was updated last
+
+    """
 
     id = Column(String(60), primary_key=True, unique=True, nullable=False)
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
@@ -33,9 +39,7 @@ class BaseModel:
         """Returns a string representation of the instance"""
         cls = (str(type(self)).split('.')[-1]).split('\'')[0]
         dict_copy = self.__dict__.copy()
-        if '_sa_instance_state' in dict_copy:
-            del dict_copy['_sa_instance_state']
-        return '[{}] ({}) {}'.format(cls, self.id, dict_copy)
+        return '[{}] ({}) {}'.format(cls, self.id, self.__dict__)
 
     def save(self):
         """Updates updated_at with current time when instance is changed"""

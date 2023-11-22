@@ -1,5 +1,8 @@
 #!/usr/bin/python3
-"""This module instantiates an object of class FileStorage"""
+"""
+Module Name: models/__init__.py
+Description: This module instantiates the storage system
+"""
 import os
 
 if os.getenv('HBNB_TYPE_STORAGE') == 'db':
