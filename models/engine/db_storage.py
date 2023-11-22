@@ -44,19 +44,14 @@ class DBStorage:
         Queries the database for all objects of class name `cls`
         if not none, otherwise map all objects
         """
-        classes = {'State': State, 'City': City, 'User': User,
-                   'Place': Place, 'Review': Review, 'Amenity': Amenity}
+        classes = [State, City, User, Place, Review]
+        objs = []
         if cls in classes:
-            cls = classes[cls]
             objs = self.__session.query(cls).all()
         else:
-            objs = self.__session.query(State).all()
-            objs.extend(self.__session.query(City).all())
-            """objs.extend(self.__session.query(User).all())
-            objs.extend(self.__session.query(Place).all())
-            objs.extend(self.__session.query(Review).all())
-            obj.extend(self.__session.query(Amenity).all())
-         """
+            for class_name in classes:
+                objs.extend(self.__session.query(class_name).all())
+
         obj_dict = {}
         for obj in objs:
             key = f"{obj.__class__.__name__}.{obj.id}"
