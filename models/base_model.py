@@ -33,7 +33,8 @@ class BaseModel:
         """Returns a string representation of the instance"""
         cls = (str(type(self)).split('.')[-1]).split('\'')[0]
         dict_copy = self.__dict__.copy()
-        del dict_copy['_sa_instance_state']
+        if '_sa_instance_state' in dict_copy:
+            del dict_copy['_sa_instance_state']
         return '[{}] ({}) {}'.format(cls, self.id, dict_copy)
 
     def save(self):
@@ -50,10 +51,9 @@ class BaseModel:
                           (str(type(self)).split('.')[-1]).split('\'')[0]})
         dictionary['created_at'] = self.created_at.isoformat()
         dictionary['updated_at'] = self.updated_at.isoformat()
-        try:
+        if '_sa_instance_state' in dictionary:
             del dictionary['_sa_instance_state']
-        except KeyError:
-            pass
+    
         return dictionary
 
     def delete(self):
