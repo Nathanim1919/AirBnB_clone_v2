@@ -1,7 +1,11 @@
 #!/usr/bin/python3
+"""
+Module Name: models/base_model.py
+Description: A definition of base class for other classes to inherit from
+"""
+import models
 import uuid
 from datetime import datetime
-import models
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 

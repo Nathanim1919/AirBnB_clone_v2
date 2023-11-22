@@ -1,12 +1,16 @@
 #!/usr/bin/python3
-"""This module defines a class User"""
+"""
+Module Name: models/user.py
+Description: This module defines a class User
+"""
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, String
 from models.base_model import BaseModel, Base
 
 
 class User(BaseModel, Base):
-    """This class defines a user by various attributes"""
+    """This class defines a user by various attributes
+    """
     __tablename__ = 'users'
 
     email = Column(String(128), nullable=False)
