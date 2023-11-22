@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 """
 Module Name: models/engine/db_storage.py
 Description: A definition of mysql database for the models
@@ -17,7 +18,12 @@ from models.review import Review
 
 class DBStorage:
     """A definition of `DBStorage` class for database connection,
-    and management for the models
+       and management for the models
+
+    Attributes:
+        __engine (sqlalchemy): The engine for connection to the database
+        __session (sqlalchemy): The session to be used to interact with the
+                                database
     """
     __engine = None
     __session = None
