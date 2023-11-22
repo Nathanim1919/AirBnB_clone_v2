@@ -1,5 +1,8 @@
 #!/usr/bin/python3
-""" Place Module for HBNB project """
+"""
+Module Name: models/place.py
+Description: Place Module for HBNB project
+"""
 import models
 from sqlalchemy import Column, String, Integer, Float, ForeignKey
 from sqlalchemy.orm import relationship
@@ -30,4 +33,4 @@ class Place(BaseModel, Base):
         to the current `place.id`
         """
         return [review for reviews in models.storage.all().values()
-                if reviews.place_place_id == self.id]
+                if reviews.place_id == self.id]

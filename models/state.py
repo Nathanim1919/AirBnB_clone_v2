@@ -1,5 +1,8 @@
 #!/usr/bin/python3
-""" State Module for HBNB project """
+"""
+Module Name: models/state.py
+Description: State Module definition for HBNB project
+"""
 import models
 import os
 from sqlalchemy import (Column, String)
@@ -8,7 +11,13 @@ from models.base_model import (BaseModel, Base)
 
 
 class State(BaseModel, Base):
-    """ State class """
+    """State class
+
+    Attributes:
+        __tablename__ (table): The name of the table in the database
+        name (str): The name of the state
+        cities (list): The lsit of cities under the same state
+    """
     __tablename__ = 'states'
 
     name = Column(String(128), nullable=False)
