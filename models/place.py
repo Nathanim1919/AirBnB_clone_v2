@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 """ Place Module for HBNB project """
+import models
 from sqlalchemy import Column, String, Integer, Float, ForeignKey
 from sqlalchemy.orm import relationship
-from models import storage
 from models.base_model import BaseModel, Base
 
 
@@ -29,5 +29,5 @@ class Place(BaseModel, Base):
         """Get a list of `Review` instances with `place_id` equals
         to the current `place.id`
         """
-        return [review for reviews in storage.all().values()
+        return [review for reviews in models.storage.all().values()
                 if reviews.place_place_id == self.id]
