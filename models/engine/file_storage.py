@@ -4,7 +4,14 @@ import json
 
 
 class FileStorage:
-    """This class manages storage of hbnb models in JSON format"""
+    """This class manages storage of hbnb models in JSON format
+
+    Attributes:
+        __file_path (str): The name of the storage file
+        __objects (dict): A dictionary that contains the combination of
+                          object's class and id with dot as key and
+                          the object created as the value
+    """
     __file_path = 'file.json'
     __objects = {}
 
