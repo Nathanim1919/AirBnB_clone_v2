@@ -1,5 +1,9 @@
 #!/usr/bin/python3
-""" Console Module """
+"""
+Module Name: console.py
+Description: Provides a command line interpreter for managing
+             the created models
+"""
 import cmd
 import sys
 from models.base_model import BaseModel
