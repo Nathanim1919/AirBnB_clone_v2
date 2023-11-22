@@ -145,12 +145,12 @@ class HBNBCommand(cmd.Cmd):
 
         try:
             """Create an instance of the class with the given parameters"""
-            new = HBNBCommand.classes[class_name](**params_dict)
+            obj = HBNBCommand.classes[class_name](**params_dict)
 
             """Save the new instance to the storage"""
-            storage.new(new)
+            storage.new(obj)
             storage.save()
-            print(new.id)
+            print(obj.id)
         except Exception as e:
             print(f"Error creating instance: {e}")
 
@@ -347,6 +347,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()

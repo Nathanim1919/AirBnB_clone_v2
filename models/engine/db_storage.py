@@ -1,12 +1,18 @@
-#!/usr/bin/python3
 """
 Module Name: models/engine/db_storage.py
 Description: A definition of mysql database for the models
 """
 import os
 from sqlalchemy import create_engine
-from sqlalchemy.orm import (sessionmaker, scoped_session)
-from models.base_model import Base
+from sqlalchemy.orm import scoped_session
+from sqlalchemy.orm import sessionmaker
+from models.base_model import BaseModel, Base
+from models.state import State
+from models.city import City
+from models.user import User
+from models.place import Place
+from models.amenity import Amenity
+from models.review import Review
 
 
 class DBStorage:
@@ -38,17 +44,23 @@ class DBStorage:
         Queries the database for all objects of class name `cls`
         if not none, otherwise map all objects
         """
-        obj_dict = {}
-        session_objects = self.__session.identity_map.values()
-        if cls:
-            for obj in session_objects:
-                if type(obj).__name__ == eval(cls):
-                    key = "cls.{}".format(obj.id)
-                    obj_dict[key] = obj
+        classes = {'State': State, 'City': City, 'User': User,
+                   'Place': Place, 'Review': Review, 'Amenity': Amenity}
+        if cls in classes:
+            cls = classes[cls]
+            objs = self.__session.query(cls).all()
         else:
-            for obj in session_objects:
-                key = "{}.{}".format(type(obj).__name__, obj.id)
-                obj_dict[key] = obj
+            objs = self.__session.query(State).all()
+            objs.extend(self.__session.query(City).all())
+            """objs.extend(self.__session.query(User).all())
+            objs.extend(self.__session.query(Place).all())
+            objs.extend(self.__session.query(Review).all())
+            obj.extend(self.__session.query(Amenity).all())
+         """
+        obj_dict = {}
+        for obj in objs:
+            key = f"{obj.__class__.__name__}.{obj.id}"
+            obj_dict[key] = obj
 
         return obj_dict
 
@@ -66,19 +78,11 @@ class DBStorage:
         """Delete the given `obj` from the current database session
         """
         if obj:
-            self.__session.query(obj).delete()
+            self.__session.delete(obj)
 
     def reload(self):
         """Create all tables in the database
         """
-        from models.base_model import BaseModel
-        from models.user import User
-        from models.place import Place
-        from models.state import State
-        from models.city import City
-        from models.amenity import Amenity
-        from models.review import Review
-
         # Create all tables
         Base.metadata.create_all(self.__engine)
 
