@@ -4,9 +4,10 @@ from models.base_model import BaseModel, Base
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, String
 
-class User(BaseModel, Base):
-    __tablename__ = 'users'
 
+class User(BaseModel, Base):
+
+    __tablename__ = 'users'
 
     email = Column(String(128), nullable=False)
     password = Column(String(128), nullable=False)
