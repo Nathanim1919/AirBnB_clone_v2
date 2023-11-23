@@ -2,10 +2,13 @@
 """ Module for testing file storage"""
 import unittest
 from models.base_model import BaseModel
+from models.state import State
 from models import storage
 import os
 
 
+@unittest.skipIf((os.getenv('HBNB_TYPE_STORAGE') == 'db'),
+                 "Only FileStorage test")
 class test_fileStorage(unittest.TestCase):
     """ Class to test the file storage method """
 
@@ -31,6 +34,7 @@ class test_fileStorage(unittest.TestCase):
     def test_new(self):
         """ New object is correctly added to __objects """
         new = BaseModel()
+        new.save()
         for obj in storage.all().values():
             temp = obj
         self.assertTrue(temp is obj)
@@ -38,6 +42,7 @@ class test_fileStorage(unittest.TestCase):
     def test_all(self):
         """ __objects is properly returned """
         new = BaseModel()
+        new.save()
         temp = storage.all()
         self.assertIsInstance(temp, dict)
 
@@ -57,13 +62,13 @@ class test_fileStorage(unittest.TestCase):
     def test_save(self):
         """ FileStorage save method """
         new = BaseModel()
-        storage.save()
+        new.save()
         self.assertTrue(os.path.exists('file.json'))
 
     def test_reload(self):
         """ Storage file is successfully loaded to __objects """
         new = BaseModel()
-        storage.save()
+        new.save()
         storage.reload()
         for obj in storage.all().values():
             loaded = obj
@@ -98,12 +103,73 @@ class test_fileStorage(unittest.TestCase):
         """ Key is properly formatted """
         new = BaseModel()
         _id = new.to_dict()['id']
+        new.save()
         for key in storage.all().keys():
-            temp = key
+            if key == 'BaseModel' + '.' + _id:
+                temp = key
         self.assertEqual(temp, 'BaseModel' + '.' + _id)
 
     def test_storage_var_created(self):
         """ FileStorage object storage created """
         from models.engine.file_storage import FileStorage
-        print(type(storage))
         self.assertEqual(type(storage), FileStorage)
+
+    def test_delete(self):
+        """Test that an instance is actually deleted
+        """
+        new = BaseModel()
+        new.save()
+        self.assertTrue(new in storage.all().values())
+        storage.delete(new)
+        self.assertFalse(new in storage.all().values())
+
+        new = State()
+        new.save()
+        self.assertTrue(new in storage.all().values())
+        storage.delete(new)
+        self.assertFalse(new in storage.all().values())
+
+    def test_delete_no_arg(self):
+        """Test nothing is deleted with no argument"""
+        new = State()
+        new.save()
+        storage.delete()
+        self.assertTrue(new in storage.all().values())
+
+    def test_all_return_type(self):
+        """Test that dict is returned"""
+        result = storage.all()
+        self.assertEqual(type(result), dict)
+
+    def test_all_a_class(self):
+        """Test listing only a class"""
+        new1 = BaseModel()
+        new1.save()
+
+        new2 = State()
+        new2.save()
+
+        list_ = storage.all(State)
+        count = 0
+        for obj in list_.values():
+            if type(obj) == State:
+                count += 1
+
+        self.assertEqual(count, 1)
+
+    def test_all_classes(self):
+        """Test that all classes are retrieved"""
+        new1 = BaseModel()
+        new2 = BaseModel()
+        new3 = State()
+
+        new1.save()
+        new2.save()
+        new3.save()
+
+        list_ = storage.all()
+        count = 0
+        for obj in list_.values():
+            count += 1
+
+        self.assertEqual(count, 3)
