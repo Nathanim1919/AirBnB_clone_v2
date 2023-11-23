@@ -138,7 +138,7 @@ class HBNBCommand(cmd.Cmd):
             key, value = param.split('=')
 
             """Replace underscores with spaces in string values"""
-            if value.startswith('"') and type(value) == str:
+            if value.startswith('"') and type(value) is str:
                 value = value.strip('"')
 
                 value = value.replace('_', ' ').replace('\\"', '"')
@@ -220,7 +220,7 @@ class HBNBCommand(cmd.Cmd):
         key = c_name + "." + c_id
 
         try:
-            del(storage.all()[key])
+            del (storage.all()[key])
             storage.save()
         except KeyError:
             print("** no instance found **")
