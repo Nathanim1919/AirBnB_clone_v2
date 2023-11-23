@@ -8,6 +8,8 @@ import json
 import os
 
 
+@unittest.skipIf((os.getenv('HBNB_TYPE_STORAGE') == 'db'),
+                 "Only for FileStorage")
 class test_basemodel(unittest.TestCase):
     """ """
 
@@ -62,8 +64,11 @@ class test_basemodel(unittest.TestCase):
     def test_str(self):
         """ """
         i = self.value()
+        dict_copy = i.__dict__.copy()
+        if '_sa_instance_state' in dict_copy:
+            del dict_copy['_sa_instance_state']
         self.assertEqual(str(i), '[{}] ({}) {}'.format(self.name, i.id,
-                         i.__dict__))
+                                                       dict_copy))
 
     def test_todict(self):
         """ """

@@ -25,7 +25,7 @@ class State(BaseModel, Base):
         cities = relationship('City', back_populates='state',
                               cascade='all, delete')
 
-    if os.getenv('HBNB_TYPE_STORAGE') == 'file':
+    else:
         name = ""
 
         @property
