@@ -31,5 +31,5 @@ class State(BaseModel, Base):
         def cities(self):
             """Returns the list of `City` class instances attribute
             """
-            return [city for cities in models.storage.all().values()
-                if cities.state_id == self.id]
+            return [city for cities in models.storage.all(City).values()
+                    if cities.state_id == self.id]
