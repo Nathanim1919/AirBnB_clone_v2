@@ -8,6 +8,7 @@ import os
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 from models.base_model import BaseModel, Base
+from models.city import City
 
 
 class State(BaseModel, Base):
@@ -19,17 +20,17 @@ class State(BaseModel, Base):
         cities (list): The lsit of cities under the same state
     """
     __tablename__ = 'states'
-
-    name = Column(String(128), nullable=False)
-
     if os.getenv('HBNB_TYPE_STORAGE') == 'db':
-        cities = relationship('City', backref='state',
-                              cascade='all, delete, delete-orphan')
+        name = Column(String(128), nullable=False)
+        cities = relationship('City', back_populates='state',
+                              cascade='all, delete')
 
     if os.getenv('HBNB_TYPE_STORAGE') == 'file':
+        name = ""
+
         @property
         def cities(self):
             """Returns the list of `City` class instances attribute
             """
-            return [city for cities in models.storage.all(City).values()
-                    if cities.state_id == self.id]
+            return [city for city in models.storage.all(City).values()
+                    if city.state_id == self.id]

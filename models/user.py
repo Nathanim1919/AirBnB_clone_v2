@@ -3,6 +3,7 @@
 Module Name: models/user.py
 Description: This module defines a class User
 """
+import os
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, String
 from models.base_model import BaseModel, Base
@@ -24,11 +25,17 @@ class User(BaseModel, Base):
     """
     __tablename__ = 'users'
 
-    email = Column(String(128), nullable=False)
-    password = Column(String(128), nullable=False)
-    first_name = Column(String(128), nullable=True)
-    last_name = Column(String(128), nullable=False)
-    places = relationship('Place', backref='user',
-                          cascade='all, delete, delete-orphan')
-    review = relationship('Review', backref='user',
-                          cascade='all, delete, delete-orphan')
+    if os.getenv('HBNB_TYPE_STORAGE') == 'db':
+        email = Column(String(128), nullable=False)
+        password = Column(String(128), nullable=False)
+        first_name = Column(String(128), nullable=True)
+        last_name = Column(String(128), nullable=False)
+        places = relationship('Place', backref='user',
+                              cascade='all, delete')
+        reviews = relationship('Review', back_populates='user',
+                               cascade='all, delete')
+    else:
+        email = ""
+        password = ""
+        first_name = ""
+        last_name = ""

@@ -14,24 +14,25 @@ from models.amenity import Amenity
 """Represents the many to many relationship table
 between Place and Amenity records.
 """
-place_amenity = Table(
-    'place_amenity',
-    Base.metadata,
-    Column(
-        'place_id',
-        String(60),
-        ForeignKey('places.id'),
-        nullable=False,
-        primary_key=True
-    ),
-    Column(
-        'amenity_id',
-        String(60),
-        ForeignKey('amenities.id'),
-        nullable=False,
-        primary_key=True
+if os.getenv('HBNB_TYPE_STORAGE') == 'db':
+    place_amenity = Table(
+        'place_amenity',
+        Base.metadata,
+        Column(
+            'place_id',
+            String(60),
+            ForeignKey('places.id'),
+            nullable=False,
+            primary_key=True
+        ),
+        Column(
+            'amenity_id',
+            String(60),
+            ForeignKey('amenities.id'),
+            nullable=False,
+            primary_key=True
+        )
     )
-)
 
 
 class Place(BaseModel, Base):
@@ -67,20 +68,25 @@ class Place(BaseModel, Base):
     longitude = Column(
         Float, nullable=True
     ) if os.getenv('HBNB_TYPE_STORAGE') == 'db' else 0.0
-    amenity_ids = []
+
     reviews = relationship(
         'Review',
         cascade="all, delete, delete-orphan",
-        backref='place'
+        back_populates='place'
     ) if os.getenv('HBNB_TYPE_STORAGE') == 'db' else None
     if os.getenv('HBNB_TYPE_STORAGE') == 'db':
         amenities = relationship(
             'Amenity',
             secondary=place_amenity,
             viewonly=False,
-            backref='place_amenities'
+            back_populates='place_amenities'
         )
+
+        cities = relationship('City', back_populates='places',
+                              cascade='all, delete')
     else:
+        amenity_ids = []
+
         @property
         def amenities(self):
             """Returns the amenities of this Place"""
@@ -102,5 +108,5 @@ class Place(BaseModel, Base):
             """Get a list of `Review` instances with `place_id` equals
             to the current `place.id`
             """
-            return [review for reviews in models.storage.all(Review).values()
-                    if reviews.place_id == self.id]
+            return [review for review in models.storage.all(Review).values()
+                    if review.place_id == self.id]
