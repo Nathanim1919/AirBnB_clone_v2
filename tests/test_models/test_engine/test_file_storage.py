@@ -136,6 +136,14 @@ class test_fileStorage(unittest.TestCase):
         storage.delete()
         self.assertTrue(new in storage.all().values())
 
+    def test_delete_invalid(self):
+        """Test excepts raised on invalid argument"""
+        with self.assertRaises(AttributeError):
+            storage.delete('')
+
+        with self.assertRaises(AttributeError):
+            storage.delete({})
+
     def test_all_return_type(self):
         """Test that dict is returned"""
         result = storage.all()
@@ -173,3 +181,16 @@ class test_fileStorage(unittest.TestCase):
             count += 1
 
         self.assertEqual(count, 3)
+
+    def test_all_invalid(self):
+        """Test exception raised on invalid arguments"""
+        with self.assertRaises(NameError):
+            storage.all(lo)
+
+        new1 = BaseModel()
+        new2 = State()
+
+        new1.save()
+        new2.save()
+        with self.assertRaises(TypeError):
+            list_ = storage.all(45)
