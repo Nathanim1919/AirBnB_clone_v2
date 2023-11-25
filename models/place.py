@@ -72,7 +72,7 @@ class Place(BaseModel, Base):
     reviews = relationship(
         'Review',
         cascade="all, delete, delete-orphan",
-        back_populates='place'
+        backref='place'
     ) if os.getenv('HBNB_TYPE_STORAGE') == 'db' else None
     if os.getenv('HBNB_TYPE_STORAGE') == 'db':
         amenities = relationship(
@@ -82,8 +82,6 @@ class Place(BaseModel, Base):
             back_populates='place_amenities'
         )
 
-        cities = relationship('City', back_populates='places',
-                              cascade='all, delete')
     else:
         amenity_ids = []
 

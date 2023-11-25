@@ -22,7 +22,7 @@ class State(BaseModel, Base):
     __tablename__ = 'states'
     if os.getenv('HBNB_TYPE_STORAGE') == 'db':
         name = Column(String(128), nullable=False)
-        cities = relationship('City', back_populates='state',
+        cities = relationship('City', backref='state',
                               cascade='all, delete')
 
     else:

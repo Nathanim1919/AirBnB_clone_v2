@@ -33,13 +33,13 @@ class DBStorage:
         """
 
         """ Environment variables """
-        HBNB_MYSQL_USER = os.getenv('HBNB_MYSQL_USER')
-        HBNB_MYSQL_PWD = os.getenv('HBNB_MYSQL_PWD')
-        HBNB_MYSQL_HOST = 'localhost'
-        HBNB_MYSQL_DB = os.getenv('HBNB_MYSQL_DB')
+        USER = os.getenv('HBNB_MYSQL_USER')
+        PWD = os.getenv('HBNB_MYSQL_PWD')
+        HOST = os.getenv('HBNB_MYSQL_HOST')
+        DB = os.getenv('HBNB_MYSQL_DB')
 
-        url = 'mysql+mysqldb://{}:{}@localhost/{}'.format(
-            HBNB_MYSQL_USER, HBNB_MYSQL_PWD, HBNB_MYSQL_DB)
+        url = 'mysql+mysqldb://{}:{}@{}/{}'.format(
+            USER, PWD, HOST, DB)
         self.__engine = create_engine(url, pool_pre_ping=True)
 
         if os.getenv('HBNB_ENV') == 'test':
@@ -52,11 +52,11 @@ class DBStorage:
         """
         classes = [State, City, User, Place, Review, Amenity]
         objs = []
-        if cls in classes:
-            objs = self.__session.query(cls).all()
+        if cls:
+            objs = self.__session.query(cls)
         else:
             for class_name in classes:
-                objs.extend(self.__session.query(class_name).all())
+                objs.extend(self.__session.query(class_name))
 
         obj_dict = {}
         for obj in objs:
@@ -80,7 +80,6 @@ class DBStorage:
         """
         if obj:
             self.__session.delete(obj)
-            self.save()
 
     def reload(self):
         """Create all tables in the database

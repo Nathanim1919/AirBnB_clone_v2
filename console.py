@@ -141,7 +141,7 @@ class HBNBCommand(cmd.Cmd):
             if value.startswith('"') and type(value) is str:
                 value = value.strip('"')
 
-                value = value.replace('_', ' ').replace('\\"', '"')
+                value = value.replace('_', ' ')
             elif type(value) not in (str, float, int):
                 pass
             else:
@@ -153,8 +153,9 @@ class HBNBCommand(cmd.Cmd):
             obj = HBNBCommand.classes[class_name](**params_dict)
 
             """Save the new instance to the storage"""
-            obj.save()
             print(obj.id)
+            obj.save()
+
         except Exception as e:
             print(f"Error creating instance: {e}")
 

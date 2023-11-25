@@ -22,7 +22,7 @@ class BaseModel:
 
     """
 
-    id = Column(String(60), primary_key=True, unique=True, nullable=False)
+    id = Column(String(60), primary_key=True, nullable=False)
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
     updated_at = Column(DateTime, nullable=False, default=datetime.utcnow())
 
@@ -30,8 +30,8 @@ class BaseModel:
         """Instatntiates a new model"""
 
         self.id = str(uuid.uuid4())
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
+        self.created_at = datetime.utcnow()
+        self.updated_at = datetime.utcnow()
         if kwargs:
             for k, v in kwargs.items():
                 if k != '__class__':
@@ -49,7 +49,7 @@ class BaseModel:
 
     def save(self):
         """Updates updated_at with current time when instance is changed"""
-        self.updated_at = datetime.now()
+        self.updated_at = datetime.utcnow()
         models.storage.new(self)
         models.storage.save()
 
