@@ -2,7 +2,6 @@
 Module Name: tests/test_console.py
 Description: The module tests the command interpreter new functionalities
 """
-import cmd
 import json
 import os
 import unittest
