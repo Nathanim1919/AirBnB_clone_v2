@@ -78,7 +78,7 @@ class TestDBStorage(unittest.TestCase):
         self.assertEqual(count_states_1, count_states_0 + 1)
         self.assertEqual(count_city_1, count_city_0 + 1)
 
-    def test_console_create_more_parameter(self):
+    def test_console_create_more_param(self):
         """Test that a value with "_" is parsed and added
         """
         count_states_0 = get_current('states')

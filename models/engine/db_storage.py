@@ -50,7 +50,7 @@ class DBStorage:
         Queries the database for all objects of class name `cls`
         if not none, otherwise map all objects
         """
-        classes = [State, City, User, Place, Review]
+        classes = [State, City, User, Place, Review, Amenity]
         objs = []
         if cls in classes:
             objs = self.__session.query(cls).all()
