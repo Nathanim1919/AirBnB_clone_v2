@@ -153,8 +153,7 @@ class HBNBCommand(cmd.Cmd):
             obj = HBNBCommand.classes[class_name](**params_dict)
 
             """Save the new instance to the storage"""
-            storage.new(obj)
-            storage.save()
+            obj.save()
             print(obj.id)
         except Exception as e:
             print(f"Error creating instance: {e}")
