@@ -8,7 +8,7 @@ import os
 import unittest
 from console import HBNBCommand
 from io import StringIO
-from models.engine.file_storage import FileStorage
+from models import storage
 from tests.test_models.test_engine.test_db_storage import get_current
 from unittest.mock import patch
 
@@ -41,8 +41,6 @@ class TestConsole(unittest.TestCase):
         except FileNotFoundError:
             pass
 
-    @unittest.skipIf((os.getenv('HBNB_TYPE_STORAGE') == 'db'),
-                     "Not supported for database")
     def test_create_kwargs_success(self):
         """
         Test that create method with one keyword argument do not end
@@ -61,15 +59,13 @@ class TestConsole(unittest.TestCase):
             HBNBCommand().onecmd('create State name="California"')
             result = output.getvalue().strip()
             test_key = f'State.{result}'
-            self.assertIn(test_key, FileStorage().all())
+            self.assertIn(test_key, storage.all())
 
         with open('file.json', mode='r', encoding='utf-8') as f:
             obj = json.load(f)
             num_obj = len(obj)
         self.assertLess(0, num_obj)
 
-    @unittest.skipIf((os.getenv('HBNB_TYPE_STORAGE') == 'db'),
-                     "Not supported for database")
     def test_create_kwargs_none(self):
         """
         Test that none value raises an exception
@@ -77,8 +73,6 @@ class TestConsole(unittest.TestCase):
         with self.assertRaises(NameError):
             HBNBCommand().onecmd('create User name=none')
 
-    @unittest.skipIf((os.getenv('HBNB_TYPE_STORAGE') == 'db'),
-                     "Not supported for database")
     def test_create_kwargs_multiple(self):
         """Test multiple keyword argument on instance creation
         """
@@ -91,7 +85,7 @@ class TestConsole(unittest.TestCase):
 
             result = output.getvalue().strip()
             test_key = f'Place.{result}'
-            objs = FileStorage().all()
+            objs = storage.all()
             self.assertIn(test_key, objs.keys())
             self.assertIn('city_id', objs[test_key].to_dict())
             self.assertIn('user_id', objs[test_key].to_dict())
