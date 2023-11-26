@@ -138,14 +138,14 @@ class HBNBCommand(cmd.Cmd):
             key, value = param.split('=')
 
             """Replace underscores with spaces in string values"""
-            if value.startswith('"') and type(value) is str:
+            if value.startswith('"'):
                 value = value.strip('"')
 
                 value = value.replace('_', ' ')
-            elif type(value) not in (str, float, int):
-                pass
+            elif '.' in value:
+                value = float(value)
             else:
-                value = eval(value)
+                value = int(value)
             params_dict[key] = value
 
         try:
@@ -246,7 +246,7 @@ class HBNBCommand(cmd.Cmd):
             for k, v in storage.all().items():
                 print_list.append(str(v))
 
-        print("[{}]".format(', '.join(print_list)))
+        print(print_list)
 
     def help_all(self):
         """ Help information for the all command """
