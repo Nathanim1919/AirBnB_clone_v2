@@ -86,6 +86,7 @@ def do_deploy(archive_path):
     print("New version deployed!")
     return True
 
+
 def deploy():
     """
     Create and deploy the archive to the server
