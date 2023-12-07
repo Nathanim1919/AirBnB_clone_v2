@@ -82,7 +82,7 @@ def do_deploy(archive_path):
         return False
 
     # Remove `web_static` directory in the `destination_path`
-    status = run("rm -rf {}/web_static".format(archive_name_with_path))
+    status = run("rm -rf {}web_static".format(archive_name_with_path))
     if status.failed is True:
         return False
 
@@ -94,7 +94,7 @@ def do_deploy(archive_path):
     # Create a new the symbolic link, linked to the new version of your code
     target = archive_name_with_path
     link = '/data/web_static/current'
-    status = run("sudo ln -s {} {}".format(target, link))
+    status = run("ln -s {} {}".format(target, link))
     if status.succeeded is True:
         print("New version deployed!")
         return True
