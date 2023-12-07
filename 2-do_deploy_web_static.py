@@ -7,9 +7,7 @@ import os
 from datetime import datetime
 from fabric.api import env, local, put, run
 
-env.user = "ubuntu"
 env.hosts = ['54.197.78.222', '18.210.16.208']
-env.key_filename = '~/.ssh/school'
 
 
 def get_filename():
