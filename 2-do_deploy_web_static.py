@@ -51,7 +51,7 @@ def do_deploy(archive_path):
         put(archive_path, "/tmp/")
 
         # Get `archive_path` without the extension
-        compressed_file = archive_path.split("/")[1]
+        compressed_file = os.path.basename(archive_path)
         archive_name = compressed_file.split(".")[0]
 
         # Make the destination directory
