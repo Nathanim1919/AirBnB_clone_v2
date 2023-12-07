@@ -42,6 +42,12 @@ def do_pack():
 def do_deploy(archive_path):
     """
     Deploy the archived directory to the servers
+
+    Args:
+        archive_path (str): The full path of the archived directory
+                            to be deployed
+    Return:
+        True if succeeded, otherwise False
     """
     if not os.path.exists(archive_path):
         return False
