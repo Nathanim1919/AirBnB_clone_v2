@@ -121,14 +121,14 @@ def do_clean(number=0):
     number = number if number > 0 else 1
     try:
         # Get all archives in the versions directory
-        local_archives = local("ls -t1 versions", capture=True).split("\n")
+        local_archives = local("ls -t versions", capture=True).split("\n")
 
         # Delete the unwanted archives
         for archive in local_archives[number:]:
             local(f"rm -r versions/{archive}")
 
         # Get all archives in `/data/web_static/releases` directory
-        remote_archives = run("ls -t1 /data/web_static/releases").split("\n")
+        remote_archives = run("ls -t /data/web_static/releases").split()
         # Delete the unwanted archives
         for archive in remote_archives[number:]:
             if "web_static_" in archive:
