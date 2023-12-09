@@ -1,11 +1,16 @@
 # Setup web server for deployment
+
+exec { 'apt-get update':
+  path => '/usr/bin:/bin',
+}
+
 package { 'nginx':
   ensure => installed,
 }
 
 exec { 'mkdirs':
-  command => 'mkdir -p "/data/web_static/releases/" "/data/web_static/shared/" "/data/web_static/releases/test/"'
-  path    => '/usr/bin:/bin'
+  command => 'mkdir -p "/data/web_static/shared/" "/data/web_static/releases/test/"',
+  path    => '/usr/bin:/bin',
 }
 
 file { 'test_index_file':
@@ -18,24 +23,33 @@ file { 'test_index_file':
     Holberton School
   </body>
 </html>",
-  mode    => '0664',
+  mode    => '0644',
   owner   => 'ubuntu',
   group   => 'ubuntu',
   require => Exec['mkdirs'],
 }
 
-$target='/data/web_static/releases/test/'
 $link='/data/web_static/current'
 exec { 'link_&_ownership':
-  command => "rm ${link} && sudo ln -s ${target} ${link} && sudo chown -R ubuntu:ubuntu /data",
+  command => "rm ${link}",
   path    => '/usr/bin:/bin',
   require => Exec['mkdirs'],
 }
 
-$location="\n\tlocation /hbnb_static {\n\
-\t\talias /data/web_static/current/;\n\t}"
+file { '/data/web_static/current':
+  ensure => link,
+  target => '/data/web_static/releases/test/'
+}
+
+exec { 'chown -R ubuntu:ubuntu /data/':
+  path => ['/usr/bin', '/bin'],
+}
+
+$location='\n\tlocation /hbnb_static {\n\
+        \talias /data/web_static/current/;\n\
+        }'
 exec { 'edit_config_file':
-  command => "sudo sed -i \"/server_name _;/a \\ ${location}\" /etc/nginx/sites-available/default",
+  command => "sudo sed -i '/server_name _;/a \\ ${location}' /etc/nginx/sites-available/default",
   path    => '/usr/bin:/bin',
 }
 
