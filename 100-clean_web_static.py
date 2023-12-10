@@ -10,22 +10,14 @@ from fabric.api import env, local, put, run
 env.hosts = ['54.197.78.222', '18.210.16.208']
 
 
-def get_filename():
-    """
-    Get the filename format
-    """
-    formatted_date = datetime.now().strftime("%Y%m%d%H%M%S")
-    filename = f"web_static_{formatted_date}.tgz"
-
-    return filename
-
-
 def do_pack():
     """
     Compress web_static directory
     """
     os.makedirs("versions", exist_ok=True)
-    filename = get_filename()
+    formatted_date = datetime.now().strftime("%Y%m%d%H%M%S")
+    filename = f"web_static_{formatted_date}.tgz"
+
     archive_path = f"versions/{filename}"
 
     print("Packing web_static to", archive_path)
