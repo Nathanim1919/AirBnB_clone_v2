@@ -29,7 +29,7 @@ def c_text(text):
 @app.route("/python", strict_slashes=False)
 @app.route("/python/<text>", strict_slashes=False)
 def python_text(text="is cool"):
-    """display “C ”, followed by the value of the text variable"""
+    """display 'C ', followed by the value of the text variable"""
     text = text.replace("_", " ")
     return "Python {}".format(text)
 
@@ -44,7 +44,7 @@ def number_text(n):
 @app.route("/number_template/<int:n>", strict_slashes=False)
 def html_page(n):
     """Displays an HTML page with the provided number"""
-    return render_template("../templates/5-number.html", n=n)
+    return render_template("5-number.html", n=n)
 
 
 if __name__ == "__main__":
