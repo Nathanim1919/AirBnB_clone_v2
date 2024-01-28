@@ -35,8 +35,8 @@ def python_text(text="is cool"):
 
 
 @app.route("/number/<int:n>", strict_slashes=False)
-def nisanumber(n):
-    """display “n is a number” only if n is an integer"""
+def number_text(n):
+    """display 'n is a number' only if n is an integer"""
     n = str(n)
     return "{n} is a number".format(n)
 
