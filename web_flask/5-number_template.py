@@ -41,10 +41,10 @@ def number_text(n):
     return "{} is a number".format(n)
 
 
-@app.router("/number_template/<int:n>", strict_slashes=False)
+@app.route("/number_template/<int:n>", strict_slashes=False)
 def html_page(n):
     """Displays an HTML page with the provided number"""
-    return render_template("5-number.html", n=n)
+    return render_template("../templates/5-number.html", n=n)
 
 
 if __name__ == "__main__":
