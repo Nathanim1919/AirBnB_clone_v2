@@ -15,14 +15,14 @@ def hello_hbnb():
 
 @app.route("/hbnb", strict_slashes=False)
 def hbnb():
-    """display “HBNB”"""
+    """display 'HBNB'"""
     return "HBNB"
 
 
 @app.route("/c/<text>", strict_slashes=False)
 def c_text(text):
-    """display “C ” followed by the value of the text variable"""
-    return f"C_{text}"
+    """display 'C ' followed by the value of the text variable"""
+    return "C_{}".format(text)
 
 
 if __name__ == "__main__":
