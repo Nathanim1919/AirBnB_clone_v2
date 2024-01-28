@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """ Starting a flask application. """
 
-from flask import Flask
+from flask import Flask, render_template
 
 
 app = Flask(__name__)
@@ -44,8 +44,7 @@ def number_text(n):
 @app.router("/number_template/<int:n>", strict_slashes=False)
 def html_page(n):
     """Displays an HTML page with the provided number"""
-    template = """<BODY><H1>{}</H1></BODY>""".format(n)
-    return template
+    return render_template("5-number.html", n=n)
 
 
 if __name__ == "__main__":
