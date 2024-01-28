@@ -44,6 +44,7 @@ def number_text(n):
 @app.route("/number_template/<int:n>", strict_slashes=False)
 def html_page(n):
     """Displays an HTML page with the provided number"""
+    n = str(n)
     return render_template("5-number.html", n=n)
 
 
